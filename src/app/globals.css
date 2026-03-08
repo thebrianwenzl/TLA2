@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-obsidian:  #1A1A2E;
+  --color-gold:      #C9A84C;
+  --color-parchment: #F5F0E8;
+  --color-cobalt:    #2C6E8A;
+  --color-crimson:   #8B2635;
+  --color-ivory:     #FFFDF7;
+  --color-charcoal:  #3D3D3D;
+}
+
+html {
+  background-color: var(--color-obsidian);
+  color: var(--color-ivory);
+}
+
+/* Art Deco chevron divider utility */
+.chevron-divider {
+  background-image: repeating-linear-gradient(
+    135deg,
+    transparent,
+    transparent 6px,
+    rgba(201, 168, 76, 0.15) 6px,
+    rgba(201, 168, 76, 0.15) 8px
+  );
+  height: 8px;
+}

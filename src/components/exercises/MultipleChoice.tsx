@@ -23,7 +23,7 @@ export default function MultipleChoice({ exercise, onResult }: MultipleChoicePro
     setSelected(idx);
     const correct = idx === correctIndex;
     setState(correct ? 'correct' : 'incorrect');
-    setTimeout(() => onResult(correct, correct ? XP_PER_EXERCISE.mcq : 0), 1200);
+    onResult(correct, correct ? XP_PER_EXERCISE.mcq : 0);
   }
 
   return (
@@ -61,13 +61,16 @@ export default function MultipleChoice({ exercise, onResult }: MultipleChoicePro
         })}
       </div>
 
-      {state === 'incorrect' && (
+      {state !== 'idle' && (
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="text-center text-sm font-body text-ivory/70"
         >
-          Correct answer: <span className="text-emerald-400">{options[correctIndex]}</span>
+          {state === 'correct'
+            ? <span className="text-emerald-400">Correct! +{XP_PER_EXERCISE.mcq} XP</span>
+            : <>Correct answer: <span className="text-emerald-400">{options[correctIndex]}</span></>
+          }
         </motion.p>
       )}
     </div>

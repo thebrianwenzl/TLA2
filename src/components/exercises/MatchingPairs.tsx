@@ -44,7 +44,7 @@ export default function MatchingPairs({ exercise, onResult }: MatchingPairsProps
 
       if (next.size === terms.length) {
         const xp = Math.max(0, XP_PER_EXERCISE.matching * terms.length - xpDeductions);
-        setTimeout(() => onResult(true, xp), 600);
+        onResult(true, xp);
       }
     } else {
       setWrongPair(selectedTerm);

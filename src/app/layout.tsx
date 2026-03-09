@@ -1,17 +1,16 @@
 import type { Metadata } from 'next';
-import { DM_Serif_Display, Montserrat, IBM_Plex_Mono } from 'next/font/google';
+import { Space_Grotesk, Inter, IBM_Plex_Mono } from 'next/font/google';
 import './globals.css';
 import Providers from '@/components/layout/Providers';
 import Navbar from '@/components/layout/Navbar';
 
-const dmSerifDisplay = DM_Serif_Display({
+const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
-  weight: '400',
   variable: '--font-display',
   display: 'swap',
 });
 
-const montserrat = Montserrat({
+const inter = Inter({
   subsets: ['latin'],
   variable: '--font-body',
   display: 'swap',
@@ -33,7 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${dmSerifDisplay.variable} ${montserrat.variable} ${ibmPlexMono.variable}`}
+      className={`${spaceGrotesk.variable} ${inter.variable} ${ibmPlexMono.variable}`}
     >
       <body className="min-h-screen bg-obsidian text-ivory font-body antialiased">
         <Providers>

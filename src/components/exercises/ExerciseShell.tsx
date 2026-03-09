@@ -27,6 +27,7 @@ export default function ExerciseShell({ exercises, industrySlug, industryName }:
   const [results, setResults] = useState<ExerciseResult[]>([]);
   const [phase, setPhase] = useState<Phase>('exercise');
   const [saving, setSaving] = useState(false);
+  const [pendingAdvance, setPendingAdvance] = useState(false);
 
   const current = exercises[index];
 
@@ -82,12 +83,21 @@ export default function ExerciseShell({ exercises, industrySlug, industryName }:
           setSaving(false);
         }
         setPhase('complete');
+      } else if (ex.type === 'flashcard') {
+        // Flashcard buttons are already the manual continue — advance immediately
+        setIndex((i) => i + 1);
       } else {
-        setTimeout(() => setIndex((i) => i + 1), 400);
+        // MCQ, FillBlank, Matching — show Continue button so user can review
+        setPendingAdvance(true);
       }
     },
     [index, exercises, results, totalXp]
   );
+
+  const handleContinue = () => {
+    setPendingAdvance(false);
+    setIndex((i) => i + 1);
+  };
 
   if (phase === 'complete') {
     return (
@@ -148,6 +158,15 @@ export default function ExerciseShell({ exercises, industrySlug, industryName }:
 
         <p className="font-body text-gold text-sm font-semibold">{totalXp} XP</p>
       </div>
+
+      {/* Continue button */}
+      {pendingAdvance && (
+        <div className="px-6 pb-2 max-w-lg mx-auto w-full">
+          <Button variant="primary" size="lg" className="w-full" onClick={handleContinue}>
+            Continue →
+          </Button>
+        </div>
+      )}
 
       {/* Exercise area */}
       <div className="flex-1 flex items-center justify-center px-6 pb-8">

@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --color-obsidian:  #1A1A2E;
-  --color-gold:      #C9A84C;
-  --color-parchment: #F5F0E8;
-  --color-cobalt:    #2C6E8A;
-  --color-crimson:   #8B2635;
-  --color-ivory:     #FFFDF7;
-  --color-charcoal:  #3D3D3D;
+  --color-obsidian:  #0C0F1A;
+  --color-gold:      #F5C518;
+  --color-parchment: #F1F5F9;
+  --color-cobalt:    #1D4ED8;
+  --color-crimson:   #DC2626;
+  --color-ivory:     #E8EDF5;
+  --color-charcoal:  #151B2E;
 }
 
 html {
@@ -17,14 +17,16 @@ html {
   color: var(--color-ivory);
 }
 
-/* Art Deco chevron divider utility */
+/* Clean bold rule — replaces Art Deco chevron */
+.rule-divider {
+  height: 3px;
+  background: linear-gradient(to right, transparent, var(--color-gold), transparent);
+  opacity: 0.4;
+}
+
+/* Backward-compat alias so existing .chevron-divider usages still render */
 .chevron-divider {
-  background-image: repeating-linear-gradient(
-    135deg,
-    transparent,
-    transparent 6px,
-    rgba(201, 168, 76, 0.15) 6px,
-    rgba(201, 168, 76, 0.15) 8px
-  );
-  height: 8px;
+  height: 3px;
+  background: linear-gradient(to right, transparent, var(--color-gold), transparent);
+  opacity: 0.4;
 }

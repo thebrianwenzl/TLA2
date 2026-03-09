@@ -38,7 +38,7 @@ export default function FillBlank({ exercise, onResult }: FillBlankProps) {
 
     const correct = answers.some((a) => a === normalized);
     setState(correct ? 'correct' : 'incorrect');
-    setTimeout(() => onResult(correct, correct ? XP_PER_EXERCISE.fill_blank : 0), 1200);
+    onResult(correct, correct ? XP_PER_EXERCISE.fill_blank : 0);
   }
 
   return (

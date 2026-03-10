@@ -2,20 +2,23 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import clsx from 'clsx';
-import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
 import type { FlashcardExercise } from '@/types';
-import { XP_PER_EXERCISE } from '@/lib/xp';
 
 interface FlashcardProps {
   exercise: FlashcardExercise;
-  onResult: (correct: boolean, xp: number) => void;
+  onFlipped: (flipped: boolean) => void;
 }
 
-export default function Flashcard({ exercise, onResult }: FlashcardProps) {
+export default function Flashcard({ exercise, onFlipped }: FlashcardProps) {
   const [flipped, setFlipped] = useState(false);
   const { term } = exercise;
+
+  function handleFlip() {
+    const next = !flipped;
+    setFlipped(next);
+    onFlipped(next);
+  }
 
   return (
     <div className="flex flex-col items-center gap-6">
@@ -23,7 +26,7 @@ export default function Flashcard({ exercise, onResult }: FlashcardProps) {
       <div
         className="w-full max-w-sm h-56 cursor-pointer select-none"
         style={{ perspective: 1000 }}
-        onClick={() => setFlipped((f) => !f)}
+        onClick={handleFlip}
       >
         <motion.div
           animate={{ rotateY: flipped ? 180 : 0 }}
@@ -63,29 +66,6 @@ export default function Flashcard({ exercise, onResult }: FlashcardProps) {
           </div>
         </motion.div>
       </div>
-
-      {flipped && (
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex gap-4 w-full max-w-sm"
-        >
-          <Button
-            variant="ghost"
-            className="flex-1"
-            onClick={() => onResult(false, 0)}
-          >
-            Still learning
-          </Button>
-          <Button
-            variant="primary"
-            className="flex-1"
-            onClick={() => onResult(true, XP_PER_EXERCISE.flashcard)}
-          >
-            Got it +{XP_PER_EXERCISE.flashcard} XP
-          </Button>
-        </motion.div>
-      )}
     </div>
   );
 }

@@ -5,46 +5,42 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        obsidian:  '#1A1A2E',
-        gold:      '#C9A84C',
-        parchment: '#F5F0E8',
-        cobalt:    '#2C6E8A',
-        crimson:   '#8B2635',
-        ivory:     '#FFFDF7',
-        charcoal:  '#3D3D3D',
+        // Paul Rand palette — bold, primary, confident
+        obsidian:  '#0C0F1A',   // near-black navy ground
+        gold:      '#F5C518',   // bold warm yellow — primary action color
+        parchment: '#F1F5F9',   // clean light surface
+        cobalt:    '#1D4ED8',   // bold primary blue
+        crimson:   '#DC2626',   // bold red — errors, wrong answers
+        ivory:     '#E8EDF5',   // cool near-white text
+        charcoal:  '#151B2E',   // card surface
       },
       fontFamily: {
-        display: ['var(--font-display)', 'serif'],
-        body:    ['var(--font-body)', 'sans-serif'],
-        mono:    ['var(--font-mono)', 'monospace'],
+        display: ['var(--font-display)', 'sans-serif'],
+        body:    ['var(--font-body)',    'sans-serif'],
+        mono:    ['var(--font-mono)',    'monospace'],
       },
       keyframes: {
-        shimmerGold: {
-          '0%':   { opacity: '0', transform: 'scale(0.95)' },
-          '50%':  { opacity: '1', transform: 'scale(1.05)' },
-          '100%': { opacity: '1', transform: 'scale(1)' },
-        },
         shake: {
-          '0%, 100%':   { transform: 'translateX(0)' },
-          '20%, 60%':   { transform: 'translateX(-8px)' },
-          '40%, 80%':   { transform: 'translateX(8px)' },
+          '0%, 100%': { transform: 'translateX(0)' },
+          '20%, 60%': { transform: 'translateX(-8px)' },
+          '40%, 80%': { transform: 'translateX(8px)' },
         },
-        flipX: {
-          '0%':   { transform: 'rotateY(0deg)' },
-          '50%':  { transform: 'rotateY(90deg)' },
-          '100%': { transform: 'rotateY(0deg)' },
+        fadeUp: {
+          '0%':   { opacity: '0', transform: 'translateY(12px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
         },
-        sunburstExpand: {
-          '0%':   { transform: 'scale(0)', opacity: '0' },
-          '60%':  { opacity: '1' },
-          '100%': { transform: 'scale(1.5)', opacity: '0' },
+        scaleIn: {
+          '0%':   { opacity: '0', transform: 'scale(0.93)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
         },
       },
       animation: {
-        'shimmer-gold':    'shimmerGold 0.3s ease-out',
-        'shake':           'shake 0.3s ease-in-out',
-        'flip-x':          'flipX 0.4s ease-in-out',
-        'sunburst-expand': 'sunburstExpand 0.6s ease-out forwards',
+        'shake':    'shake 0.3s ease-in-out',
+        'fade-up':  'fadeUp 0.25s ease-out',
+        'scale-in': 'scaleIn 0.2s ease-out',
+      },
+      maxWidth: {
+        '8xl': '88rem',
       },
     },
   },

@@ -1,10 +1,10 @@
 import { prisma } from './prisma';
 import type { Exercise, TermWithProgress, MCQExercise } from '@/types';
 
-const EXERCISE_CYCLE: Array<'flashcard' | 'mcq' | 'fill_blank' | 'matching'> = [
+const EXERCISE_POOL: Array<'flashcard' | 'mcq' | 'fill_blank' | 'matching'> = [
   'flashcard', 'mcq', 'fill_blank', 'matching',
-  'mcq', 'flashcard', 'fill_blank', 'matching',
-  'mcq', 'flashcard', 'fill_blank', 'matching',
+  'flashcard', 'mcq', 'fill_blank', 'matching',
+  'flashcard', 'mcq', 'fill_blank', 'matching',
 ];
 
 function shuffle<T>(arr: T[]): T[] {
@@ -82,9 +82,12 @@ export async function buildLesson(
   const exercises: Exercise[] = [];
   let matchingBuffer: TermWithProgress[] = [];
 
+  // Shuffle the pool each session so the same term gets a different type each time
+  const shuffledPool = shuffle([...EXERCISE_POOL]);
+
   for (let i = 0; i < selected.length; i++) {
     const term = selected[i];
-    const cycleType = EXERCISE_CYCLE[i % EXERCISE_CYCLE.length];
+    const cycleType = shuffledPool[i % shuffledPool.length];
 
     if (cycleType === 'matching') {
       matchingBuffer.push(term);

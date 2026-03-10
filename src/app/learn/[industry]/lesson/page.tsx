@@ -36,6 +36,7 @@ export default async function LessonPage({ params }: Props) {
       exercises={exercises}
       industrySlug={industry.slug}
       industryName={industry.name}
+      industryId={industry.id}
     />
   );
 }

@@ -9,17 +9,21 @@ export default function Navbar() {
   const { data: session } = useSession();
 
   return (
-    <nav className="w-full border-b border-gold/20 bg-obsidian/95 backdrop-blur sticky top-0 z-40">
-      <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
-        <Link href="/" className="font-display text-2xl text-gold tracking-wide hover:opacity-80 transition-opacity">
+    <nav className="w-full bg-charcoal border-b border-white/8 sticky top-0 z-40">
+      <div className="max-w-8xl mx-auto px-6 h-14 flex items-center justify-between">
+        {/* Bold wordmark — Paul Rand would approve */}
+        <Link href="/" className="font-display text-2xl font-bold text-gold tracking-tight hover:opacity-80 transition-opacity">
           TLA
         </Link>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-5">
           {session?.user ? (
             <>
               {session.user.isAdmin && (
-                <Link href="/admin" className="font-body text-sm text-gold/70 hover:text-gold transition-colors">
+                <Link
+                  href="/admin"
+                  className="font-body text-sm text-ivory/50 hover:text-ivory transition-colors"
+                >
                   Admin
                 </Link>
               )}
@@ -29,12 +33,15 @@ export default function Navbar() {
                   alt={session.user.name ?? 'User'}
                   width={32}
                   height={32}
-                  className="rounded-full border border-gold/30"
+                  className="rounded-full ring-2 ring-gold/40"
                 />
               )}
-              <Button variant="ghost" size="sm" onClick={() => signOut({ callbackUrl: '/' })}>
+              <button
+                onClick={() => signOut({ callbackUrl: '/' })}
+                className="font-body text-sm text-ivory/50 hover:text-ivory transition-colors"
+              >
                 Sign out
-              </Button>
+              </button>
             </>
           ) : (
             <Link href="/signin">

@@ -1,0 +1,24 @@
+<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="55" fill="#F97316" opacity="0.1"/>
+  
+  <!-- Character body -->
+  <rect x="45" y="70" width="30" height="40" rx="2" fill="#065f46"/>
+  
+  <!-- Character head -->
+  <circle cx="60" cy="50" r="15" fill="#fbbf24"/>
+  
+  <!-- Hair -->
+  <path d="M45 45 Q60 35 75 45 Q75 40 60 35 Q45 40 45 45" fill="#374151"/>
+  
+  <!-- Eyes -->
+  <circle cx="55" cy="48" r="2" fill="#1f2937"/>
+  <circle cx="65" cy="48" r="2" fill="#1f2937"/>
+  
+  <!-- Smile -->
+  <path d="M52 55 Q60 60 68 55" stroke="#1f2937" stroke-width="2" fill="none"/>
+  
+  <!-- Arms -->
+  <rect x="35" y="75" width="10" height="20" rx="5" fill="#fbbf24"/>
+  <rect x="75" y="75" width="10" height="20" rx="5" fill="#fbbf24"/>
+</svg>

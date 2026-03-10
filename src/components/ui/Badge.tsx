@@ -6,31 +6,27 @@ interface BadgeProps {
   children: React.ReactNode;
   variant?: BadgeVariant;
   className?: string;
-  /** Render as an octagonal level badge */
+  /** Render as a bold circular level badge */
   level?: boolean;
 }
 
 const variantClasses: Record<BadgeVariant, string> = {
   gold:    'bg-gold text-obsidian',
-  cobalt:  'bg-cobalt text-ivory',
-  crimson: 'bg-crimson text-ivory',
-  default: 'bg-parchment/20 text-parchment border border-parchment/30',
+  cobalt:  'bg-cobalt text-white',
+  crimson: 'bg-crimson text-white',
+  default: 'bg-white/10 text-ivory border border-white/20',
 };
 
 export default function Badge({ children, variant = 'default', className, level }: BadgeProps) {
   if (level) {
-    // Octagonal clip-path badge
+    // Bold circle badge — clean, confident, Paul Rand
     return (
       <div
         className={clsx(
-          'relative inline-flex items-center justify-center w-14 h-14 font-display font-bold text-xl',
+          'inline-flex items-center justify-center w-12 h-12 rounded-full font-display font-bold text-lg shrink-0',
           variantClasses[variant],
           className
         )}
-        style={{
-          clipPath:
-            'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)',
-        }}
       >
         {children}
       </div>

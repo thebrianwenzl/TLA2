@@ -1,0 +1,221 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User Management
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  username    String   @unique
+  password    String   // Hashed with bcrypt
+  firstName   String?
+  lastName    String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  lastLoginAt DateTime?
+
+  // User Progress & Gamification
+  totalXP     Int      @default(0)
+  level       Int      @default(1)
+  streak      Int      @default(0)
+  lastActive  DateTime @default(now())
+
+  // Relationships
+  progress    UserProgress[]
+  achievements UserAchievement[]
+  gameResults GameResult[]
+  gameSessions GameSession[]
+  
+  @@map("users")
+}
+
+// Subject Categories (e.g., "Medical", "Legal", "Tech")
+model Subject {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  icon        String?  // Icon identifier
+  color       String?  // Theme color
+  isActive    Boolean  @default(true)
+  difficulty  Int      @default(1) // 1-5 scale
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  vocabulary  Vocabulary[]
+  progress    UserProgress[]
+  challenges   Challenge[]
+  gameSessions GameSession[]
+  
+  @@map("subjects")
+}
+
+// Vocabulary Terms
+model Vocabulary {
+  id          String   @id @default(cuid())
+  term        String   // The acronym (e.g., "API")
+  definition  String   // Full definition
+  fullForm    String   // What the acronym stands for
+  example     String?  // Usage example
+  difficulty  Int      @default(1) // 1-5 scale
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  subjectId   String
+  subject     Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  gameResults GameResult[]
+
+  @@map("vocabulary")
+}
+
+// User Progress per Subject
+model UserProgress {
+  id              String   @id @default(cuid())
+  userId          String
+  subjectId       String
+  
+  // Progress Metrics
+  totalTerms      Int      @default(0)
+  masteredTerms   Int      @default(0)
+  currentStreak   Int      @default(0)
+  bestStreak      Int      @default(0)
+  totalXP         Int      @default(0)
+  lastStudied     DateTime @default(now())
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relationships
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject         Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, subjectId])
+  @@map("user_progress")
+}
+
+// Achievement System
+model Achievement {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String
+  icon        String?
+  category    String   // "streak", "mastery", "exploration", etc.
+  requirement Int      // Threshold to unlock
+  xpReward    Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  // Relationships
+  userAchievements UserAchievement[]
+  
+  @@map("achievements")
+}
+
+// User Achievement Junction
+model UserAchievement {
+  id            String      @id @default(cuid())
+  userId        String
+  achievementId String
+  unlockedAt    DateTime    @default(now())
+
+  // Relationships
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, achievementId])
+  @@map("user_achievements")
+}
+
+// Game Results for Analytics
+model GameResult {
+  id           String   @id @default(cuid())
+  userId       String
+  vocabularyId String
+  gameType     String   // "multiple_choice", "fill_blank", "matching", etc.
+  
+  // Result Data
+  isCorrect    Boolean
+  timeSpent    Int      // milliseconds
+  attempts     Int      @default(1)
+  xpEarned     Int      @default(0)
+  
+  createdAt    DateTime @default(now())
+
+  // Relationships
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vocabulary   Vocabulary @relation(fields: [vocabularyId], references: [id], onDelete: Cascade)
+
+  @@map("game_results")
+}
+
+// Challenge definitions
+model Challenge {
+  id              String   @id @default(cuid())
+  subjectId       String
+  level           Int      // 1-5 difficulty level
+  type            String   // 'FourChoicesOneWord', 'ReverseDefinitions', etc.
+  prompt          String   // Question or instruction text
+  correctAnswer   String   // The correct answer
+  distractors     Json?    // Array of incorrect options for multiple choice
+  timeLimit       Int      @default(120) // seconds
+  xpReward        Int      @default(10)
+  difficultyLevel Int      @default(1)
+  challengeData   Json?    // Additional structured data for complex game types
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relationships
+  subject         Subject           @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  attempts        ChallengeAttempt[]
+
+  @@map("challenges")
+}
+
+// Game session tracking
+model GameSession {
+  id               String   @id @default(cuid())
+  userId           String
+  subjectId        String
+  sessionType      String   // 'main_path' or 'practice'
+  startedAt        DateTime @default(now())
+  completedAt      DateTime?
+  totalChallenges  Int?
+  correctAnswers   Int      @default(0)
+  xpEarned         Int      @default(0)
+  sessionData      Json?    // Additional session metrics
+  isCompleted      Boolean  @default(false)
+
+  // Relationships
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject          Subject           @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  attempts         ChallengeAttempt[]
+
+  @@map("game_sessions")
+}
+
+// Individual challenge attempts within sessions
+model ChallengeAttempt {
+  id           String   @id @default(cuid())
+  sessionId    String
+  challengeId  String
+  userAnswer   String
+  isCorrect    Boolean
+  timeTaken    Int?     // milliseconds
+  xpEarned     Int      @default(0)
+  attemptedAt  DateTime @default(now())
+
+  // Relationships
+  session      GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  challenge    Challenge   @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+
+  @@map("challenge_attempts")
+}

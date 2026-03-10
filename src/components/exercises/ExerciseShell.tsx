@@ -10,23 +10,27 @@ import FillBlank from './FillBlank';
 import MatchingPairs from './MatchingPairs';
 import ArtDecoFrame from '@/components/ui/ArtDecoFrame';
 import Button from '@/components/ui/Button';
+import { XP_PER_EXERCISE } from '@/lib/xp';
 import type { Exercise, ExerciseResult } from '@/types';
 
 interface ExerciseShellProps {
   exercises: Exercise[];
   industrySlug: string;
   industryName: string;
+  industryId: string;
 }
 
 type Phase = 'exercise' | 'complete' | 'levelup';
 
-export default function ExerciseShell({ exercises, industrySlug, industryName }: ExerciseShellProps) {
+export default function ExerciseShell({ exercises, industrySlug, industryName, industryId }: ExerciseShellProps) {
   const router = useRouter();
   const [index, setIndex] = useState(0);
   const [totalXp, setTotalXp] = useState(0);
   const [results, setResults] = useState<ExerciseResult[]>([]);
   const [phase, setPhase] = useState<Phase>('exercise');
   const [saving, setSaving] = useState(false);
+  const [pendingAdvance, setPendingAdvance] = useState(false);
+  const [flashcardFlipped, setFlashcardFlipped] = useState(false);
 
   const current = exercises[index];
 
@@ -68,26 +72,30 @@ export default function ExerciseShell({ exercises, industrySlug, industryName }:
           await fetch('/api/progress', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              industryId: exercises[0].type === 'matching'
-                ? exercises[0].terms[0].industryId
-                : (exercises[0] as { term: { industryId: string } }).term.industryId,
-              xpEarned: nextXp,
-              results: nextResults,
-            }),
+            body: JSON.stringify({ industryId, xpEarned: nextXp, results: nextResults }),
           });
+          router.refresh(); // Bust client-side router cache so industry page re-fetches
         } catch {
           // Non-fatal — progress save failure shouldn't block completion screen
         } finally {
           setSaving(false);
         }
         setPhase('complete');
+      } else if (ex.type === 'flashcard') {
+        setFlashcardFlipped(false);
+        setIndex((i) => i + 1);
       } else {
-        setTimeout(() => setIndex((i) => i + 1), 400);
+        // MCQ, FillBlank, Matching — show Continue button so user can review
+        setPendingAdvance(true);
       }
     },
-    [index, exercises, results, totalXp]
+    [index, exercises, results, totalXp, industryId, router]
   );
+
+  const handleContinue = () => {
+    setPendingAdvance(false);
+    setIndex((i) => i + 1);
+  };
 
   if (phase === 'complete') {
     return (
@@ -111,6 +119,8 @@ export default function ExerciseShell({ exercises, industrySlug, industryName }:
               setTotalXp(0);
               setResults([]);
               setPhase('exercise');
+              setPendingAdvance(false);
+              setFlashcardFlipped(false);
             }}>
               Practice Again
             </Button>
@@ -149,6 +159,26 @@ export default function ExerciseShell({ exercises, industrySlug, industryName }:
         <p className="font-body text-gold text-sm font-semibold">{totalXp} XP</p>
       </div>
 
+      {/* Action buttons — unified position for all exercise types */}
+      <div className="px-6 pb-2 max-w-lg mx-auto w-full">
+        {current.type === 'flashcard' && flashcardFlipped ? (
+          <div className="flex gap-3">
+            <Button variant="ghost" className="flex-1" onClick={() => handleResult(false, 0)}>
+              Still learning
+            </Button>
+            <Button variant="primary" className="flex-1" onClick={() => handleResult(true, XP_PER_EXERCISE.flashcard)}>
+              Got it +{XP_PER_EXERCISE.flashcard} XP
+            </Button>
+          </div>
+        ) : pendingAdvance ? (
+          <Button variant="primary" size="lg" className="w-full" onClick={handleContinue}>
+            Continue →
+          </Button>
+        ) : (
+          <div className="h-11" />
+        )}
+      </div>
+
       {/* Exercise area */}
       <div className="flex-1 flex items-center justify-center px-6 pb-8">
         <div className="w-full max-w-lg">
@@ -163,7 +193,7 @@ export default function ExerciseShell({ exercises, industrySlug, industryName }:
                   transition={{ duration: 0.15, ease: 'easeOut' }}
                 >
                   {current.type === 'flashcard' && (
-                    <Flashcard exercise={current} onResult={handleResult} />
+                    <Flashcard exercise={current} onFlipped={setFlashcardFlipped} />
                   )}
                   {current.type === 'mcq' && (
                     <MultipleChoice exercise={current} onResult={handleResult} />

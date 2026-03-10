@@ -1,0 +1,28 @@
+<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="55" fill="#F97316" opacity="0.1"/>
+  
+  <!-- Character body (casual shirt) -->
+  <rect x="45" y="70" width="30" height="40" rx="2" fill="#3b82f6"/>
+  
+  <!-- Character head -->
+  <circle cx="60" cy="50" r="15" fill="#fbbf24"/>
+  
+  <!-- Hair (messy style) -->
+  <path d="M45 42 Q50 35 55 40 Q60 32 65 40 Q70 35 75 42 Q75 45 70 48 Q60 38 50 48 Q45 45 45 42" fill="#374151"/>
+  
+  <!-- Eyes -->
+  <circle cx="55" cy="48" r="2" fill="#1f2937"/>
+  <circle cx="65" cy="48" r="2" fill="#1f2937"/>
+  
+  <!-- Smile -->
+  <path d="M52 55 Q60 60 68 55" stroke="#1f2937" stroke-width="2" fill="none"/>
+  
+  <!-- Arms -->
+  <rect x="35" y="75" width="10" height="20" rx="5" fill="#fbbf24"/>
+  <rect x="75" y="75" width="10" height="20" rx="5" fill="#fbbf24"/>
+  
+  <!-- Backpack straps -->
+  <rect x="48" y="72" width="3" height="15" fill="#dc2626"/>
+  <rect x="69" y="72" width="3" height="15" fill="#dc2626"/>
+</svg>

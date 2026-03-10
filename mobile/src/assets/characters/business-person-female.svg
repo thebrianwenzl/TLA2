@@ -1,0 +1,31 @@
+<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="55" fill="#F97316" opacity="0.1"/>
+  
+  <!-- Character body (blazer) -->
+  <rect x="45" y="70" width="30" height="40" rx="2" fill="#1f2937"/>
+  
+  <!-- Blouse -->
+  <rect x="50" y="70" width="20" height="35" fill="#ffffff"/>
+  
+  <!-- Character head -->
+  <circle cx="60" cy="50" r="15" fill="#fbbf24"/>
+  
+  <!-- Hair (longer style) -->
+  <path d="M42 45 Q60 30 78 45 Q78 50 75 55 Q60 40 45 55 Q42 50 42 45" fill="#8b4513"/>
+  
+  <!-- Eyes -->
+  <circle cx="55" cy="48" r="2" fill="#1f2937"/>
+  <circle cx="65" cy="48" r="2" fill="#1f2937"/>
+  
+  <!-- Smile -->
+  <path d="M52 55 Q60 60 68 55" stroke="#1f2937" stroke-width="2" fill="none"/>
+  
+  <!-- Arms -->
+  <rect x="35" y="75" width="10" height="20" rx="5" fill="#fbbf24"/>
+  <rect x="75" y="75" width="10" height="20" rx="5" fill="#fbbf24"/>
+  
+  <!-- Blazer sleeves -->
+  <rect x="35" y="75" width="10" height="15" rx="5" fill="#1f2937"/>
+  <rect x="75" y="75" width="10" height="15" rx="5" fill="#1f2937"/>
+</svg>
